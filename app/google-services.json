@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "888605162021",
+    "firebase_url": "https://eventhub-e720f.firebaseio.com",
+    "project_id": "eventhub-e720f",
+    "storage_bucket": "eventhub-e720f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:888605162021:android:462856aed08fea6f",
+        "android_client_info": {
+          "package_name": "com.example.shuaizhang.eventhub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "888605162021-2gd6r8ogg2meduda9aj06311m2gr3a6r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shuaizhang.eventhub",
+            "certificate_hash": "bec4da527d77b65ab26332a8654c5b303855e8cd"
+          }
+        },
+        {
+          "client_id": "888605162021-5o18c50lt3jvo6bovtibtjk4eps97tv1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2mSikSoMp_CiaPyexfpfe6iURmJwF4LQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "888605162021-5o18c50lt3jvo6bovtibtjk4eps97tv1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

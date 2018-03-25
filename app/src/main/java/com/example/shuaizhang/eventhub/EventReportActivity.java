@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,6 +22,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,10 +71,19 @@ public class EventReportActivity extends AppCompatActivity {
 
         img_event_picture = (ImageView) findViewById(R.id.img_event_picture_capture);
 
+        //Initialize cloud storage
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
+
         mImageViewSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String key = uploadEvent();
+                if (mImgUri != null) {
+                    uploadImage(key);
+                    mImgUri = null;
+                }
+
             }
         });
 
@@ -135,9 +149,6 @@ public class EventReportActivity extends AppCompatActivity {
             }
         });
 
-        //Initialize cloud storage
-        storage = FirebaseStorage.getInstance();
-        storageRef = storage.getReference();
 
     }
 
@@ -205,5 +216,38 @@ public class EventReportActivity extends AppCompatActivity {
             ex.printStackTrace();
         }
     }
+
+
+    /**
+     * Upload image picked up from gallery to Firebase Cloud storage
+     * @param eventId eventId
+     */
+    private void uploadImage(final String eventId) {
+        if (mImgUri == null) {
+            return;
+        }
+        StorageReference imgRef = storageRef.child("images/" + mImgUri.getLastPathSegment() + "_"
+                + System.currentTimeMillis());
+
+        UploadTask uploadTask = imgRef.putFile(mImgUri);
+
+        // Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                @SuppressWarnings("VisibleForTests")
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                Log.i(TAG, "upload successfully" + eventId);
+                database.child("events").child(eventId).child("imgUri").
+                        setValue(downloadUrl.toString());
+            }
+        });
+    }
+
 
 }

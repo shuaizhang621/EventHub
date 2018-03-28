@@ -11,13 +11,14 @@ public class Event {
     private String title;
     private String address;
     private String description;
-
-
     private int like;
     private String id;
     private long time;
     private String username;
     private String imgUri;
+
+    private int CommentNumber;
+
 
     public Event() {}
 
@@ -71,6 +72,14 @@ public class Event {
 
     public void setImgUri(String imgUri) {
         this.imgUri = imgUri;
+    }
+
+    public int getCommentNumber() {
+        return CommentNumber;
+    }
+
+    public void setCommentNumber(int commentNumber) {
+        CommentNumber = commentNumber;
     }
 
     /**

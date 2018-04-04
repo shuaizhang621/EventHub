@@ -2,6 +2,8 @@ package com.example.shuaizhang.eventhub;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
@@ -32,12 +34,17 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EventMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
+public class EventMapFragment extends Fragment implements
+        OnMapReadyCallback,
+        GoogleMap.OnInfoWindowClickListener,
+        GoogleMap.OnMarkerClickListener{
     private MapView mMapView;
     private View mView;
     private DatabaseReference database;
     private List<Event> events;
     private GoogleMap mGoogleMap;
+    private Marker lastClicked;
+
 
     public EventMapFragment() {
         // Required empty public constructor
@@ -108,6 +115,7 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback, Go
                 .newCameraPosition(cameraPosition));
         setUpMarkersCloseToCurLocation(googleMap, curLatitude, curLongitude);
 
+        mGoogleMap.setOnMarkerClickListener(this);
     }
 
 
@@ -164,6 +172,38 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback, Go
         intent.putExtra("EventID", eventId);
         getContext().startActivity(intent);
     }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+        final Event event = (Event)marker.getTag();
+        if (lastClicked != null && lastClicked.equals(marker)) {
+            lastClicked = null;
+            marker.hideInfoWindow();
+            marker.setIcon(null);
+            return true;
+        } else {
+            lastClicked = marker;
+            new AsyncTask<Void, Void, Bitmap>(){
+                @Override
+                protected Bitmap doInBackground(Void... voids) {
+                    Bitmap bitmap = Utils.getBitmapFromURL(event.getImgUri());
+                    return bitmap;
+                }
+
+                @Override
+                protected void onPostExecute(Bitmap  bitmap) {
+                    super.onPostExecute(bitmap);
+                    if (bitmap != null) {
+                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+
+                        marker.setTitle(event.getTitle());
+                    }
+                }
+            }.execute();
+            return false;
+        }
+    }
+
 
 
 }

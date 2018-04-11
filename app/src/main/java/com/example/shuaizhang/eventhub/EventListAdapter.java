@@ -58,7 +58,7 @@ public class EventListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
      * @param events events that are showing on screen
      * @param context context
      */
-    public EventListAdapter(List<Event> events, final Context context) {
+    public EventListAdapter(List<Event> events, Context context) {
         eventList = events;
         databaseReference = FirebaseDatabase.getInstance().getReference();
         this.context = context;
